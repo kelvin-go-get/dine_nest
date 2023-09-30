@@ -1,5 +1,5 @@
 import React from "react";
-import useStyles from './style.jsx';
+import useStyles from './style';
 import { Autocomplete } from "@react-google-maps/api";
 import { AppBar, Toolbar, Typography, InputBase, Box } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search"
@@ -14,7 +14,7 @@ const Header = () => {
         </Typography>
         <Box display="flex">
           <Typography variant="h6" className={classes.title}>
-            Explore Kenya
+            Explore Nairobi
           </Typography>
           {/* <Autocomplete> */}
             <div className={classes.search}>
