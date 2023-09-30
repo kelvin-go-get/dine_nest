@@ -22,4 +22,4 @@ To run the project locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/dine_nest.git
+   git clone https://github.com/kelvin-go-get/dine_nest.git
