@@ -23,3 +23,31 @@ To run the project locally, follow these steps:
 
    ```bash
    git clone https://github.com/kelvin-go-get/dine_nest.git
+
+2. Navigate to the project directory:
+
+cd dine_nest
+
+
+3. Install dependencies:
+
+npm install
+
+
+4. Run the application:
+
+npm start
+
+
+5. The application will be accessible at http://localhost:3000 in your browser.
+
+Contributing
+Contributions are welcome! If you have suggestions, improvements, or new features to add, please feel free to create issues or pull requests.
+
+License
+This project is licensed under the MIT License.
+
+Acknowledgments
+Data sourced from [RapidApi]
+Icons by [@material-ui/icons]
+Happy Traveling!
