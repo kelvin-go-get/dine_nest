@@ -6,12 +6,11 @@ import "leaflet-bing-layer";
 import useStyles from "./styles";
 import LocationOnOutlined from "@material-ui/icons/LocationOnOutlined";
 
-const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
+const Map = ({ setCoordinates, setBounds, coordinates, places, setChildClicked }) => {
   const classes = useStyles();
   const [map, setMap] = useState(null);
 
   useEffect(() => {
-    console.log("Places:", places);
     const mapContainer = document.getElementById("map");
 
     if (
@@ -44,31 +43,36 @@ const Map = ({ setCoordinates, setBounds, coordinates, places }) => {
         ),
       });
 
-      // Add a marker for the user's location and places with the same custom icon
+      // Add a marker for the user's location
       L.marker([coordinates.lat, coordinates.lng], {
         icon: locationAndPlaceIcon,
       }).addTo(leafletMap);
 
       // Map over places and add markers with the same custom icon
       places?.forEach((place, i) => {
-        L.marker([place.latitude, place.longitude], {
+        const marker = L.marker([place.latitude, place.longitude], {
           icon: locationAndPlaceIcon,
-        })
-          .addTo(leafletMap)
-          .bindPopup(
-            `<div>
-        <strong>${place.name}</strong>
-        <br />
-        <img src="${
-          place.photo
-            ? place.photo.images.large.url
-            : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
-        }" alt="${place.name}" style="width:100px; height: auto;" />
-      </div>`
-          );
+        });
+
+        marker.addTo(leafletMap).bindPopup(
+          `<div>
+            <strong>${place.name}</strong>
+            <br />
+            <img src="${
+              place.photo
+                ? place.photo.images.large.url
+                : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
+            }" alt="${place.name}" style="width:100px; height: auto;" />
+          </div>`
+        );
+
+        // Add click event handler for each marker
+        marker.on('click', () => {
+          setChildClicked(place);
+        });
       });
     }
-  }, [map, coordinates, places]);
+  }, [map, coordinates, places, setChildClicked]);
 
   return (
     <div
