@@ -8,22 +8,48 @@ import Map from "./components/Map/Map";
 const App = () => {
   const [places, setPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({});
-  const [bounds, setBounds] = useState(null);
+  const [bounds, setBounds] = useState({});
+
+  const fetchGeolocation = () => {
+    navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
+      setCoordinates({ lat: latitude, lng: longitude });
+    });
+  };
 
   useEffect(() => {
-navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude}}) => {
-setCoordinates ({lat: latitude, lng: longitude} )
-})
-  }, [])
+    fetchGeolocation(); // Invoke it immediately
+
+    // Optionally, you can add cleanup logic here if needed.
+  }, []);
 
   useEffect(() => {
-    console.log (coordinates, bounds)
-    getPlacesData()
-    .then((data) => {
-      console.log(data);
-      setPlaces(data);
-    })
-  }, [coordinates, bounds]);
+    if (coordinates.lat && coordinates.lng) {
+      // Assuming you want to set bounds around the current location
+      const sw = { lat: coordinates.lat - 0.1, lng: coordinates.lng - 0.1 };
+      const ne = { lat: coordinates.lat + 0.1, lng: coordinates.lng + 0.1 };
+      setBounds({ sw, ne });
+    }
+  }, [coordinates]);
+
+  useEffect(() => {
+    const placesBounds = {
+      sw: { lat: coordinates.lat - 0.2, lng: coordinates.lng - 0.2 },
+      ne: { lat: coordinates.lat + 0.2, lng: coordinates.lng + 0.2 },
+    };
+
+    console.log("Places Bounds:", placesBounds);
+
+    if (placesBounds && placesBounds.sw && placesBounds.ne) {
+      getPlacesData(placesBounds.sw, placesBounds.ne)
+        .then((data) => {
+          console.log("Places data:", data);
+          setPlaces(data);
+        })
+        .catch((error) => {
+          console.error("Error fetching places data:", error);
+        });
+    }
+  }, [coordinates]);
 
   return (
     <>
@@ -31,13 +57,14 @@ setCoordinates ({lat: latitude, lng: longitude} )
       <Header />
       <Grid container spacing={3} style={{ width: "100%" }}>
         <Grid item xs={12} md={4}>
-          <List />
+          <List places={places} />
         </Grid>
         <Grid item xs={12} md={8}>
-          <Map 
-            setCoordinates = {setCoordinates}
-            setBounds = {setBounds}
-            coordinates = {coordinates}
+          <Map
+            setCoordinates={setCoordinates}
+            setBounds={setBounds}
+            coordinates={coordinates}
+            places={places}
           />
         </Grid>
       </Grid>
